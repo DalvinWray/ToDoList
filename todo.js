@@ -6,10 +6,12 @@ const todoList=document.querySelector("#todo-list");
 
 const complete=document.querySelector(".completeBtn");
 
+const dropDown=document.querySelector("#dropDown");
+
 //Event Listners
 addBtn.addEventListener('click', addToList);
 todoList.addEventListener('click', deleteOrComplete);
-
+dropDown.addEventListener('click',dropDownMenu);
 
 //Functions
 
@@ -61,7 +63,7 @@ function addToList(event){
 
 
 function deleteOrComplete(event){
-    btn=event.target;
+    const btn=event.target;
     //strike through
     if(btn.classList[0]==="completeBtn"){
         btn.parentElement.classList.toggle("classCompleted");
@@ -70,6 +72,56 @@ function deleteOrComplete(event){
     //remove
     else if (btn.classList[0]==="deleteBtn"){
         btn.parentElement.remove();
+    }
+}
+
+
+function dropDownMenu(event){
+    
+    const todoListTaskIndex=todoList.children.length;
+    
+    
+    switch (event.target.value){
+
+        //display all tasks
+        case "all":
+            
+            for (let i=0;i<todoListTaskIndex;i++){
+                todoList.children[i].style.display="flex";
+            }
+            break;
+
+        //display completed tasks
+        case "complete":
+            
+            for (let i=0;i<todoListTaskIndex;i++){
+
+                if (todoList.children[i].classList[1]==="classCompleted"){
+                    todoList.children[i].style.display="flex";
+                }
+                
+                else{
+                    todoList.children[i].style.display="none";
+                }
+
+            }
+            break;
+        
+        //display incomplete tasks
+        case "incomplete":
+
+            for (let i=0;i<todoListTaskIndex;i++){
+                if ( todoList.children[i].classList[1] !== "classCompleted"){
+                    todoList.children[i].style.display="flex";
+                }
+                else{
+                    todoList.children[i].style.display="none";
+                }
+            }
+            break;
+
+
+
     }
 
 }
