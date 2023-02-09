@@ -1,11 +1,12 @@
+/*TO- DO List By Dalvin Wray*/
+
+
 //Selectors
 
 const addBtn= document.querySelector("#add");
 const inputField=document.querySelector("#input-area");
 const todoList=document.querySelector("#todo-list");
-
 const complete=document.querySelector(".completeBtn");
-
 const dropDown=document.querySelector("#dropDown");
 
 //Event Listners
@@ -20,12 +21,21 @@ dropDown.addEventListener('click',dropDownMenu);
 //Functions
 
 //Executes on load of website or refresh
-
 addEventListener('load', function(){
+    //Main Array
     let taskList;
+    //Converting the JSON string from local storagae to a array that stores incomplete tasks
     let taskTodoArray= JSON.parse(localStorage.getItem('taskTodoArray'));
     
+    //Array that contains completed tasks
+    //Converting the JSON string from local storagae to an array that stores completed task
+    let taskCompletedArray=JSON.parse(localStorage.getItem('taskComplete'));
+    let taskComplete;
 
+    
+
+
+    //assigning the array that will store incompleted tasks to a variable
     if(taskTodoArray===null){
         taskList=[];
     }
@@ -34,33 +44,37 @@ addEventListener('load', function(){
     }
 
     
-
-    taskList.forEach(function(task,taskIndex,taskArray){
+    //Loop through the array that stores incomplete tasks
+    taskList.forEach(function(task,taskIndex){
         
         //div to contain task elements
         const todo=document.createElement('div');
         todo.classList.add("task");
 
-        // task user wishes to do
+        //task user wishes to do
         const listItem=document.createElement('li');
         listItem.innerText=task;
         listItem.classList.add("listTask");
         todo.append(listItem);
 
 
-        //button to show that task was completed
+        //Complete Button
         const taskComplete= document.createElement('button');
         taskComplete.innerText="Complete";
         taskComplete.classList.add("completeBtn");
+        //Stores the index position of the task in the array, to a button to make manipulating the item in the array easier.
         taskComplete.id=taskIndex;
+
         todo.append(taskComplete);
     
 
-        //button to show that task was deleted
+        //Delete Button
         const taskDelete= document.createElement('button');
         taskDelete.innerText="Delete";
         taskDelete.classList.add("deleteBtn");
+        //Stores the index position of the task in the array, to a button to make manipulating the item in the array easier.
         taskDelete.id=taskIndex;
+
         todo.append(taskDelete);
     
         //add the div that contains the task, complete and delete buttons to
@@ -69,14 +83,57 @@ addEventListener('load', function(){
 
     });
 
+
+    //assigning the array that will store completed tasks to a variable
+    if(taskCompletedArray===null){
+        taskComplete=[];
+    }
+    else{
+        taskComplete=taskCompletedArray;
+    }
+
+    //Loop through the array that stores complete tasks
+    taskComplete.forEach(function(task,taskIndex){
+        //div to contain task elements
+        const todo=document.createElement('div');
+        todo.classList.add("task");
+        todo.classList.add("classCompleted");
+
+        //task user wishes to do
+        const listItem=document.createElement('li');
+        listItem.innerText=task;
+        listItem.classList.add("listTask");
+        todo.append(listItem);
+
+
+        //complete button
+        const taskComplete= document.createElement('button');
+        taskComplete.innerText="Complete";
+        taskComplete.classList.add("completeBtn");
+        taskComplete.id=taskIndex;
+        todo.append(taskComplete);
+    
+
+        //delete button
+        const taskDelete= document.createElement('button');
+        taskDelete.innerText="Delete";
+        taskDelete.classList.add("deleteBtn");
+        taskDelete.classList.add("completedDeleteBtn");
+        taskDelete.id=taskIndex;
+        todo.append(taskDelete);
+    
+        //add the div that contains the task, complete and delete buttons to
+        // the ul element in the list
+        todoList.append(todo);
+
+    });
     
 
 });
 
 
 
-
-
+//These actions are triggered when the user adds a new item to the To-Do list
 function addToList(event){
     
     //Stores input in local storage
@@ -90,25 +147,93 @@ function addToList(event){
        
 }
 
-
+//These actions are triggered when the user presses the delete or complete button
 function deleteOrComplete(event){
     const btn=event.target;
-    const taskTodoArray=JSON.parse(localStorage.getItem('taskTodoArray'));
-    const index=btn.id;
-    let taskCompletedArray= JSON.parse(localStorage.getItem('taskComplete'));
 
-    //strike through(completed)
+    //Converts a JSON string back into an Array that stores incomplete tasks
+    const taskTodoArray=JSON.parse(localStorage.getItem('taskTodoArray'));
+
+    //As stated earlier the position of tasks in the array are stored in both the complete and delete button respectively
+    const index=btn.id;
+
+    //Converts a JSON string back into an Array that stores incomplete tasks
+    let taskCompletedArray= JSON.parse(localStorage.getItem('taskComplete'));
+    
+    let taskComplete;
+    
+    
+    if(taskCompletedArray===null){
+        taskComplete=[];
+    }
+    
+    else{
+        taskComplete=taskCompletedArray;
+    }
+    
+    //Complete Button
     if(btn.classList[0]==="completeBtn"){
-        btn.parentElement.classList.toggle("classCompleted");
         
+        //When user presses the complete button it will toggle between complete and incomplete, 
+        //depending on the current state of the task
+        if (btn.parentElement.classList[1] !=="classCompleted"){
+            //If the complete button is pressed when a task is incomplete the following code block will be executed
+            //Firstly the task will be added to the taskComplete array
+            //Secondly the task will be deleted from the array with incomplete tasks
+            //Thirdly the array with completed tasks will be converted into a JSON string, then added to local storage
+            //Fourthly the array with incomplete tasks will be converted into a JSON string, then added to local storage
+            //Lastly page is refreshed to show the latest version of the todo list
+            taskComplete.push(taskTodoArray[index]);
+            taskTodoArray.splice(index,1);
+            localStorage.setItem('taskComplete',JSON.stringify(taskComplete));
+            localStorage.setItem('taskTodoArray',JSON.stringify(taskTodoArray));
+            location.reload();
+        }
+
+        else{
+            //If the complete button is pressed when a task is completed the following code block will be executed
+            //Firstly the task will be added to the incomplete tasks array
+            //Secondly the task will be deleted from the array with completed tasks
+            //Thirdly the array with completed tasks will be cverted into a JSON string, then added to local storage
+            //Fourthly the array with incomplete tasks will be converted into a JSON string, then added to local storage
+            //Lastly page is refreshed to show the latest version of the todo list
+            taskTodoArray.push(taskComplete[index]);
+            taskComplete.splice(index,1);
+            localStorage.setItem('taskComplete',JSON.stringify(taskComplete));
+            localStorage.setItem('taskTodoArray',JSON.stringify(taskTodoArray));
+            location.reload();
+        }
+        
+
     }
 
-    //remove
+    //Delete Button
     else if (btn.classList[0]==="deleteBtn"){
-        taskTodoArray.splice(index,1);
-        btn.parentElement.remove();
-        localStorage.setItem('taskTodoArray',JSON.stringify(taskTodoArray));
-        location.reload();
+        //If user hits the delete button on a task that is completed 
+        //the following code block will be executed
+        if(btn.classList[1]==="completedDeleteBtn"){
+            //Firstly task is deleted from the array
+            taskComplete.splice(index,1);
+            //Secondly task is deleted from the items on screen
+            btn.parentElement.remove;
+            //Thirdly the array with completed tasks is converted into a JSON string and stored in local storage
+            localStorage.setItem('taskComplete',JSON.stringify(taskComplete));
+            //Fourthly the webpage is refreshed
+            location.reload();
+        }
+        
+        //IF user hits teh delete button on a task that is incomplete the following code block will be executed
+        else{
+            //task is deleted from the array
+            taskTodoArray.splice(index,1);
+            //task is deleted from the items on screen
+            btn.parentElement.remove();
+            //Updated array is converted into a JSON string and stored in local storage
+            localStorage.setItem('taskTodoArray',JSON.stringify(taskTodoArray));
+            //webpage is refreshed
+            location.reload();
+        }
+
     }
     
 }
@@ -116,9 +241,9 @@ function deleteOrComplete(event){
 
 function dropDownMenu(event){
     
+    //finds the length of all items in the todo list
     const todoListTaskIndex=todoList.children.length;
-    
-    
+
     switch (event.target.value){
 
         //display all tasks
@@ -166,7 +291,7 @@ function dropDownMenu(event){
 
 }
 
-//Storage
+//Stores tasks directly from the input field
 function saveTasks(task){
     
     let taskTodoArray;
@@ -181,5 +306,4 @@ function saveTasks(task){
     localStorage.setItem("taskTodoArray",JSON.stringify(taskTodoArray));
 }
 
-
-//idk wtf i am doing
+/*TO- DO List By Dalvin Wray*/

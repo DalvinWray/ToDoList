@@ -1,3 +1,5 @@
+/*TO- DO List By Dalvin Wray*/
+
 *{
     margin: 0;
     padding: 0;
@@ -18,12 +20,17 @@ body{
     font-size: 4rem;
 }
 
+/*
+Div Containing Input field, add to list button, and filter dropdown
+*/
 #input-main{
     display: flex;
     justify-content:center ;
     margin: 2rem;
 }
 
+
+/*input field*/
 #input-area{
     padding:1rem 8rem ;
     border-radius: 1rem;
@@ -31,6 +38,7 @@ body{
     font-size: 1.5rem;
 }
 
+/* add to list button*/
 #add{
     border-radius: 0.5rem;
     border: none;
@@ -40,7 +48,7 @@ body{
     color:rgba(255,255,255);
 }
 
-
+/* div that containt  task elements*/
 #todo-area #todo-list .task {
     display: flex;
     justify-content: center;
@@ -56,16 +64,16 @@ body{
 }
 
 
-
+/* all button elements in the task div*/
 .task button{
     margin:1rem;
     border: none;
     border-radius: 2rem;
     padding: 1rem;
     
-    
 }
 
+/* complete button in the task div*/
 .task .completeBtn{
     margin-left:10rem ;
     background-color: rgb(34, 65, 0);
@@ -73,6 +81,7 @@ body{
     
 }
 
+/* delete button in the task div*/
 .task .deleteBtn{
     margin-left:10rem ;
     background-color: rgb(111, 7, 7);
@@ -80,11 +89,19 @@ body{
     
 }
 
-.classCompleted{
+/* 
+list item in classCompleted div which is the same div 
+that contains task elements.
+This class and it's styling is only added to completed tasks
+*/
+.classCompleted li{
     text-decoration: line-through;
+    color: rgb(0, 255, 0);
 }
 
-
+/*
+Filter drop down menu
+*/
 #dropDown{
     margin-left: 1rem;
     border: none;
@@ -94,3 +111,5 @@ body{
     color:rgb(255, 255, 255);
     text-align: center;
 }
+
+/*TO- DO List By Dalvin Wray*/
